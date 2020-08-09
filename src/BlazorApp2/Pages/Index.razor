@@ -1,0 +1,18 @@
+﻿@page "/"
+@inject Services.FetchAuthStatusService AuthStatusService
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@using BazorAuth.Shared
+@using BlazorPro.Spinkit
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+
+@code {
+    private string displayName;
+    protected override async Task OnInitializedAsync()
+    {
+        displayName = await sessionStorage.GetItemAsync<string>("displayName");
+    }
+
+}

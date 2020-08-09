@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using InMemoryIdentityApp.Extensions;
 using InMemoryIdentityApp.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +30,31 @@ namespace InMemoryIdentityApp.Extensions
             Action<IdentityOptions> setupAction)
             where TUser : class
         {
+            services.ConfigureApplicationCookie(o =>
+            {
+                o.Events = new CookieAuthenticationEvents()
+                {
+                    OnRedirectToLogin = (ctx) =>
+                    {
+                        if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == (int)HttpStatusCode.OK)
+                        {
+                            ctx.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                    OnRedirectToAccessDenied = (ctx) =>
+                    {
+                        if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == (int)HttpStatusCode.OK)
+                        {
+                            ctx.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
             // Services used by identity
             var authenticationBuilder = services.AddAuthentication(options =>
             {
@@ -58,7 +85,7 @@ namespace InMemoryIdentityApp.Extensions
                     options.ClientId = record.ClientId;
                     options.ClientSecret = record.ClientSecret;
                     options.SaveTokens = true;
-
+                    
                     options.Events.OnMessageReceived = context =>
                     {
                         var key = context.HttpContext.Request.GetJsonCookie<string>(".oidc.memoryCacheKey");
@@ -100,9 +127,9 @@ namespace InMemoryIdentityApp.Extensions
                         context.HandleResponse();
                         return Task.CompletedTask;
                     };
-                });
+                }); 
             }
-
+            
 
             return new IdentityBuilder(typeof(TUser), services);
         }

@@ -19,9 +19,24 @@ using Microsoft.Extensions.Logging;
 using Serilog.Enrichers.Extensions;
 using CorrelationId.DependencyInjection;
 using CorrelationId;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
 
 namespace InMemoryIdentityApp
 {
+    class FakeAuthenticationStateProvider : AuthenticationStateProvider
+    {
+        public override Task<AuthenticationState> GetAuthenticationStateAsync()
+        {
+            var identity = new ClaimsIdentity(new[]
+            {
+            new Claim(ClaimTypes.Name, "Some fake user"),
+        }, "Fake authentication type");
+
+            var user = new ClaimsPrincipal(identity);
+            return Task.FromResult(new AuthenticationState(user));
+        }
+    }
     public class Startup
     {
         public IConfiguration Configuration { get; }
@@ -44,6 +59,7 @@ namespace InMemoryIdentityApp
         {
             try
             {
+                services.AddScoped<AuthenticationStateProvider, FakeAuthenticationStateProvider>();
                 services.AddDefaultCorrelationId();
                 services.AddEnrichers();
                 services.Configure<CookiePolicyOptions>(options =>
@@ -54,6 +70,7 @@ namespace InMemoryIdentityApp
                 });
 
                 services.AddInMemoryIdentity<ApplicationUser, ApplicationRole>().AddDefaultTokenProviders();
+                 
 
                 services.ConfigureApplicationCookie(options =>
                 {
@@ -61,6 +78,9 @@ namespace InMemoryIdentityApp
                 });
                 services.AddAuthentication<ApplicationUser>(Configuration);
 
+                 
+
+                services.AddControllers();
                 services.AddRazorPages();
 
                 // Adds a default in-memory implementation of IDistributedCache.
@@ -69,8 +89,8 @@ namespace InMemoryIdentityApp
                 services.AddSession(options =>
                 {
                     options.Cookie.Name = $"{Configuration["applicationName"]}.Session";
-                // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromSeconds(3600);
+                    // Set a short timeout for easy testing.
+                    options.IdleTimeout = TimeSpan.FromSeconds(3600);
                     options.Cookie.HttpOnly = true;
                 });
             }
@@ -99,7 +119,7 @@ namespace InMemoryIdentityApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
+                app.UseWebAssemblyDebugging();
             }
             else
             {
@@ -109,20 +129,74 @@ namespace InMemoryIdentityApp
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseCorrelationId();
-            app.UseCookiePolicy();
+            app.MapWhen(ctx => {
+                if (
+                ctx.Request.Path.StartsWithSegments("/BlazorApp1") ||
+                ctx.Request.Path.StartsWithSegments("/BlazorApp2"))
+                    return false;
+                return true;
+            }, config => {
 
-            app.UseRouting();
+                config.UseStaticFiles();
+                config.UseCorrelationId();
+                config.UseCookiePolicy();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseSession();
+                config.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
+                config.UseAuthentication();
+                config.UseAuthorization();
+                config.UseSession();
+                config.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                    endpoints.MapRazorPages();
+                });
             });
+            app.MapWhen(ctx => {
+                return ctx.Request.Path.StartsWithSegments("/BlazorApp1");
+            }, config => {
+
+                config.UseBlazorFrameworkFiles("/BlazorApp1");
+                config.UseStaticFiles();
+                config.UseCorrelationId();
+                config.UseCookiePolicy();
+                //  app.UseBlazorFrameworkFiles();
+
+                config.UseRouting();
+
+                config.UseAuthentication();
+                config.UseAuthorization();
+                app.UseSession();
+                config.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                    endpoints.MapRazorPages();
+                    endpoints.MapFallbackToFile("/BlazorApp1/{*path:nonfile}", "BlazorApp1/index.html");
+                });
+            });
+            app.MapWhen(ctx => {
+                return ctx.Request.Path.StartsWithSegments("/BlazorApp2");
+            }, config => {
+
+                config.UseBlazorFrameworkFiles("/BlazorApp2");
+                config.UseStaticFiles();
+                config.UseCorrelationId();
+                config.UseCookiePolicy();
+                //  app.UseBlazorFrameworkFiles();
+
+                config.UseRouting();
+
+                config.UseAuthentication();
+                config.UseAuthorization();
+                config.UseSession();
+                config.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                    endpoints.MapRazorPages();
+                    endpoints.MapFallbackToFile("/BlazorApp2/{*path:nonfile}", "BlazorApp2/index.html");
+                });
+            });
+          
         }
     }
 }
