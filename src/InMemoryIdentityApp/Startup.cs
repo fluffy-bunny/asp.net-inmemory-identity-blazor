@@ -24,19 +24,7 @@ using System.Security.Claims;
 
 namespace InMemoryIdentityApp
 {
-    class FakeAuthenticationStateProvider : AuthenticationStateProvider
-    {
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
-        {
-            var identity = new ClaimsIdentity(new[]
-            {
-            new Claim(ClaimTypes.Name, "Some fake user"),
-        }, "Fake authentication type");
-
-            var user = new ClaimsPrincipal(identity);
-            return Task.FromResult(new AuthenticationState(user));
-        }
-    }
+     
     public class Startup
     {
         public IConfiguration Configuration { get; }
@@ -59,7 +47,6 @@ namespace InMemoryIdentityApp
         {
             try
             {
-                services.AddScoped<AuthenticationStateProvider, FakeAuthenticationStateProvider>();
                 services.AddDefaultCorrelationId();
                 services.AddEnrichers();
                 services.Configure<CookiePolicyOptions>(options =>
