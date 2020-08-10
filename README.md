@@ -18,8 +18,12 @@ Example..
   "ApplicationInsights:InstrumentationKey": "<secret>",
   "oidc:1:clientId": "62cb1f99-3dce-4d29-a1c6-1e90f5de4ae4",
   "oidc:1:clientSecret": "<secret>",
-  "oidc:1:authority": "https://login.microsoftonline.com/3b217a9b-6c58-428b-b022-5ad741ce2016/v2.0/"
+  "oidc:1:authority": "https://login.microsoftonline.com/<secret>/v2.0/",
+  "oidc:2:clientId": "<secret>.apps.googleusercontent.com",
+  "oidc:2:clientSecret": "<secret>",
+  "oidc:2:authority": "https://accounts.google.com/"
 }
+
 ```
 
 
