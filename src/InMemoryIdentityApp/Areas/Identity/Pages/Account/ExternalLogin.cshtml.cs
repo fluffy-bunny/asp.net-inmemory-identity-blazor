@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using InMemoryIdentityApp.Extensions;
 using InMemoryIdentityApp.Data;
+using BazorAuth.Shared;
+using Microsoft.AspNetCore.Http;
 
 namespace InMemoryIdentityApp.Areas.Identity.Pages.Account
 {
@@ -111,6 +113,7 @@ namespace InMemoryIdentityApp.Areas.Identity.Pages.Account
                 LoginProider = info.LoginProvider,
                 OIDC = oidc
             });
+            var r = HttpContext.Session.Get<OpenIdConnectSessionDetails>(Wellknown.OIDCSessionKey);
 
             var queryNameId = from claim in info.Principal.Claims
                               where claim.Type == ClaimTypes.NameIdentifier

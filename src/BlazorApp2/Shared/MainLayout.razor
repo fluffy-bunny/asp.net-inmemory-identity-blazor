@@ -44,7 +44,7 @@
     {
         try
         {
-            displayName = await AuthStatusService.GetAuthStatus();
+            displayName = await AuthStatusService.GetUserDisplayNameStatus();
             await sessionStorage.SetItemAsync("displayName", displayName);
             displayName = await sessionStorage.GetItemAsync<string>("displayName");
             this.StateHasChanged();
