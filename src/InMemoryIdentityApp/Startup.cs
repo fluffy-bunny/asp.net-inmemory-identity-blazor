@@ -145,7 +145,7 @@ namespace InMemoryIdentityApp
             app.MapWhen(ctx => {
                 if (
                 ctx.Request.Path.StartsWithSegments("/BlazorApp1") ||
-                ctx.Request.Path.StartsWithSegments("/BlazorApp2"))
+                ctx.Request.Path.StartsWithSegments("/BlazorAppRealTime"))
                     return false;
                 return true;
             }, config => {
@@ -166,50 +166,37 @@ namespace InMemoryIdentityApp
                 });
             });
             app.MapWhen(ctx => {
-                return ctx.Request.Path.StartsWithSegments("/BlazorApp1");
+                return ctx.Request.Path.StartsWithSegments("/BlazorAppRealTime");
             }, config => {
-
-                config.UseBlazorFrameworkFiles("/BlazorApp1");
-                config.UseStaticFiles();
-                config.UseCorrelationId();
-                config.UseCookiePolicy();
-                //  app.UseBlazorFrameworkFiles();
-
-                config.UseRouting();
-
-                config.UseAuthentication();
-                config.UseAuthorization();
-                app.UseSession();
-                config.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers();
-                    endpoints.MapRazorPages();
-                    endpoints.MapFallbackToFile("/BlazorApp1/{*path:nonfile}", "BlazorApp1/index.html");
-                });
+                AddBlazorPath(config, "BlazorAppRealTime");
             });
             app.MapWhen(ctx => {
                 return ctx.Request.Path.StartsWithSegments("/BlazorApp2");
             }, config => {
-
-                config.UseBlazorFrameworkFiles("/BlazorApp2");
-                config.UseStaticFiles();
-                config.UseCorrelationId();
-                config.UseCookiePolicy();
-                //  app.UseBlazorFrameworkFiles();
-
-                config.UseRouting();
-
-                config.UseAuthentication();
-                config.UseAuthorization();
-                config.UseSession();
-                config.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers();
-                    endpoints.MapRazorPages();
-                    endpoints.MapFallbackToFile("/BlazorApp2/{*path:nonfile}", "BlazorApp2/index.html");
-                });
+                AddBlazorPath(config, "BlazorApp2");
             });
           
+        }
+        void AddBlazorPath(IApplicationBuilder builder, string name)
+        {
+            builder.UseBlazorFrameworkFiles($"/{name}");
+            builder.UseStaticFiles();
+            builder.UseCorrelationId();
+            builder.UseCookiePolicy();
+            //  app.UseBlazorFrameworkFiles();
+
+            builder.UseRouting();
+
+            builder.UseAuthentication();
+            builder.UseAuthorization();
+            builder.UseSession();
+            builder.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapRazorPages();
+                endpoints.MapFallbackToFile($"/{name}/{{*path:nonfile}}", $"{name}/index.html");
+            });
+      
         }
     }
 }

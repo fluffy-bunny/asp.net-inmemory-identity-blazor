@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BazorAuth.Shared", "BazorAu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientSideAuth", "ClientSideAuth\ClientSideAuth.csproj", "{69167A15-A8CB-42D8-8DA5-5967FA04AE34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorAppRealTime", "BlazorAppRealTime\BlazorAppRealTime.csproj", "{701DC663-FC5A-4863-A416-0D6230CFB002}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{69167A15-A8CB-42D8-8DA5-5967FA04AE34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69167A15-A8CB-42D8-8DA5-5967FA04AE34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69167A15-A8CB-42D8-8DA5-5967FA04AE34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{701DC663-FC5A-4863-A416-0D6230CFB002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{701DC663-FC5A-4863-A416-0D6230CFB002}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{701DC663-FC5A-4863-A416-0D6230CFB002}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{701DC663-FC5A-4863-A416-0D6230CFB002}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
