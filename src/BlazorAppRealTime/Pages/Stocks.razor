@@ -1,0 +1,74 @@
+@page "/stocks"
+@inject HttpClient Http
+@using BazorAuth.Shared
+@using Microsoft.AspNetCore.SignalR.Client
+@using System.Collections.Generic
+@inject NavigationManager NavigationManager
+<h1>Stocks</h1>
+
+
+<p><em>Market is @marketState</em></p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Symbol</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in _mapStocks)
+        {
+            <tr>
+                <td>@item.Value.Symbol</td>
+                <td>@item.Value.Price</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    string marketState = "Closed";
+    Dictionary<string, Stock> _mapStocks = new Dictionary<string, Stock>();
+    Stock[] stocks;
+    private HubConnection hubConnection;
+
+    private WeatherForecast[] forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var url = NavigationManager.ToAbsoluteUri("/stock-ticker");
+        var url2 = url.AbsoluteUri;
+        hubConnection = new HubConnectionBuilder()
+               .WithUrl(url)
+               .Build();
+        hubConnection.On<string>("OnMarketStateChanged", (state) =>
+        {
+            marketState = state;
+            StateHasChanged();
+        });
+
+        hubConnection.On<Stock>("OnStockChanged", (stock) =>
+        {
+            _mapStocks[stock.Symbol] = stock;
+            StateHasChanged();
+        });
+        await hubConnection.StartAsync();
+
+
+
+
+
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+    }
+
+    public class WeatherForecast
+    {
+        public DateTime Date { get; set; }
+
+        public int TemperatureC { get; set; }
+
+        public string Summary { get; set; }
+
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}

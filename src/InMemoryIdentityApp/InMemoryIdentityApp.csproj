@@ -30,6 +30,7 @@
     <ProjectReference Include="..\BlazorAppRealTime\BlazorAppRealTime.csproj" />
     <ProjectReference Include="..\Identity.Contrib.InMemoryStore\Identity.Contrib.InMemoryStore.csproj" />
     <ProjectReference Include="..\Serilog.Enricher.CorrelationId\Serilog.Enrichers.csproj" />
+    <ProjectReference Include="..\StockTicker.Service\StockTicker.Service.csproj" />
   </ItemGroup>
 
 </Project>

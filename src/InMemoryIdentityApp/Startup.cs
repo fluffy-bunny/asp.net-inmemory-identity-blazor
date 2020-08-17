@@ -22,6 +22,9 @@ using CorrelationId;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.ResponseCompression;
+using InMemoryIdentityApp.Hubs;
+using ClientSideAuth.Extensions;
 
 namespace InMemoryIdentityApp
 {
@@ -48,6 +51,14 @@ namespace InMemoryIdentityApp
         {
             try
             {
+                services.AddCors(options => options.AddPolicy("CorsPolicy",
+                  builder =>
+                  {
+                      builder.AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowAnyOrigin();
+                  }));
+                services.AddRandomStockTicker();
                 services.AddDefaultCorrelationId();
                 services.AddEnrichers();
                 services.Configure<CookiePolicyOptions>(options =>
@@ -94,6 +105,12 @@ namespace InMemoryIdentityApp
 
                 services.AddControllers();
                 services.AddRazorPages();
+                services.AddSignalR();
+                services.AddResponseCompression(opts =>
+                {
+                    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                        new[] { "application/octet-stream" });
+                });
 
                 // Adds a default in-memory implementation of IDistributedCache.
                 services.AddDistributedMemoryCache();
@@ -153,6 +170,7 @@ namespace InMemoryIdentityApp
                 config.UseStaticFiles();
                 config.UseCorrelationId();
                 config.UseCookiePolicy();
+                config.UseCors("CorsPolicy");
 
                 config.UseRouting();
 
@@ -163,6 +181,7 @@ namespace InMemoryIdentityApp
                 {
                     endpoints.MapControllers();
                     endpoints.MapRazorPages();
+                    endpoints.MapHub<StockTickerHub>("/stock-ticker");
                 });
             });
             app.MapWhen(ctx => {
@@ -183,6 +202,7 @@ namespace InMemoryIdentityApp
             builder.UseStaticFiles();
             builder.UseCorrelationId();
             builder.UseCookiePolicy();
+            builder.UseCors("CorsPolicy");
             //  app.UseBlazorFrameworkFiles();
 
             builder.UseRouting();
