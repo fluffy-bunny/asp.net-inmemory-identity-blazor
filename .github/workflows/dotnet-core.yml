@@ -16,7 +16,10 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.301
+        dotnet-version: 3.1.401
+    - name: Change Locations
+       run: |
+         cd src
     - name: Install dependencies
       run: dotnet restore
     - name: Build
