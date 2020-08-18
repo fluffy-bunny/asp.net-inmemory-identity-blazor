@@ -21,6 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         cd src
+        dotnet nuget add source ${{ secrets.NUGET_DEVEXPRESS_COM }} -n nuget.devexpress.com
         dotnet restore
     - name: Build
       run: |
