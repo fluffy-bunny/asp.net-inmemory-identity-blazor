@@ -18,13 +18,15 @@ jobs:
       with:
         dotnet-version: 3.1.401
 
-    - name: 'Build Image'
+    - name: Install dependencies
       run: |
         cd src
-        
-    - name: Install dependencies
-      run: dotnet restore
+        dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: |
+        cd src
+        dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: |
+        cd src
+        dotnet test --no-restore --verbosity normal
