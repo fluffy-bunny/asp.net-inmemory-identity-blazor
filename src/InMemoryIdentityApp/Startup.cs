@@ -161,7 +161,7 @@ namespace InMemoryIdentityApp
             app.UseHttpsRedirection();
             app.MapWhen(ctx => {
                 if (
-                ctx.Request.Path.StartsWithSegments("/BlazorApp1") ||
+                ctx.Request.Path.StartsWithSegments("/BlazorApp2") ||
                 ctx.Request.Path.StartsWithSegments("/BlazorAppRealTime"))
                     return false;
                 return true;
