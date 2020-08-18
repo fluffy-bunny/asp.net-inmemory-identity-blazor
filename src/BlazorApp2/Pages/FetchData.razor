@@ -15,17 +15,19 @@
                     <th>Temp. (C)</th>
                     <th>Temp. (F)</th>
                     <th>Summary</th>
+                    <th>Precipitation</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var forecast in forecasts)
                 {
-                    <tr>
-                        <td>@forecast.Date.ToShortDateString()</td>
-                        <td>@forecast.TemperatureC</td>
-                        <td>@forecast.TemperatureF</td>
-                        <td>@forecast.Summary</td>
-                    </tr>
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                    <td>@forecast.Precipitation</td>
+                </tr>
                 }
             </tbody>
         </table>

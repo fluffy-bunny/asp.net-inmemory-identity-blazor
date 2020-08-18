@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 
 namespace ClientSideAuth.Extensions
 {
+    
     public static class DependencyInjection
     {
         public static WebAssemblyHostBuilder AddClientSideAuth(this WebAssemblyHostBuilder builder)
@@ -23,6 +26,13 @@ namespace ClientSideAuth.Extensions
 
               })
                 .AddHttpMessageHandler<AuthorizedHandler>();
+
+            builder.Services.AddTransient<HttpClient>(sp => {
+                var authorizedHandler = sp.GetRequiredService<AuthorizedHandler>();
+                return new HttpClient(authorizedHandler) { 
+                    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) };
+                });
+
             builder.Services.AddSingleton<IHostHttpClient, HostHttpClient>();
 
             return builder;

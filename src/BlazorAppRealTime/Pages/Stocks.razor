@@ -1,9 +1,9 @@
 @page "/stocks"
-@inject HttpClient Http
 @using BazorAuth.Shared
 @using Microsoft.AspNetCore.SignalR.Client
 @using System.Collections.Generic
 @inject NavigationManager NavigationManager
+@inject Services.FetchWeatherForecastService WeatherService
 <h1>Stocks</h1>
 
 
@@ -25,6 +25,40 @@
         }
     </tbody>
 </table>
+
+<DxChart Data="@forecasts" LabelOverlap="ChartLabelOverlap.Hide">
+    <DxChartTitle Text="Weather Forecast">
+        <DxChartSubTitle Text="(10 days)" />
+    </DxChartTitle>
+    <DxChartArgumentAxis>
+        <DxChartAxisTitle Text="Date" />
+        <DxChartAxisLabel Format="ChartAxisLabelFormat.ShortDate" />
+    </DxChartArgumentAxis>
+    <DxChartValueAxis>
+        <DxChartAxisTitle Text="Precipitation, mm" />
+    </DxChartValueAxis>
+    <DxChartValueAxis Name="Temperature" Position="HorizontalEdge.Right">
+        <DxChartAxisTitle Text="Temperature, C" />
+    </DxChartValueAxis>
+    <DxChartBarSeries ArgumentField="@((WeatherForecast i) => i.Date)"
+                      ValueField="@((WeatherForecast i) => i.Precipitation)"
+                      Name="Precipitation">
+        <DxChartSeriesLabel Visible="true" />
+    </DxChartBarSeries>
+    <DxChartLineSeries ArgumentField="@((WeatherForecast i) => i.Date)"
+                       ValueField="@((WeatherForecast i) => i.TemperatureC)"
+                       Name="Temperature"
+                       Axis="Temperature">
+        <DxChartSeriesPoint Symbol="@ChartPointSymbol.Polygon" Size="20" />
+        <DxChartSeriesLabel Visible="true">
+            <DxChartSeriesLabelConnector Visible="true" Width="2" />
+        </DxChartSeriesLabel>
+    </DxChartLineSeries>
+    <DxChartLegend Orientation="@Orientation.Horizontal"
+                   HorizontalAlignment="@HorizontalAlignment.Right"
+                   Position="RelativePosition.Outside" />
+</DxChart>
+
 
 @code {
     string marketState = "Closed";
@@ -54,21 +88,11 @@
         });
         await hubConnection.StartAsync();
 
+        forecasts = await WeatherService.GetPublicWeatherForeacast();
 
 
 
-
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
     }
 
-    public class WeatherForecast
-    {
-        public DateTime Date { get; set; }
 
-        public int TemperatureC { get; set; }
-
-        public string Summary { get; set; }
-
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
 }

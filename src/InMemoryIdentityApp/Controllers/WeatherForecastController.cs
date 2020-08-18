@@ -33,13 +33,15 @@ namespace InMemoryIdentityApp.Controllers
         {
             Thread.Sleep(2000);
             var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            var result =  Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
+                Summary = Summaries[rng.Next(Summaries.Length)],
+                Precipitation = rng.Next(0,10)
             })
             .ToArray();
+            return result;
         }
     }
 }

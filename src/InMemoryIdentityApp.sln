@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BazorAuth.Shared", "BazorAu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientSideAuth", "ClientSideAuth\ClientSideAuth.csproj", "{69167A15-A8CB-42D8-8DA5-5967FA04AE34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorAppRealTime", "BlazorAppRealTime\BlazorAppRealTime.csproj", "{701DC663-FC5A-4863-A416-0D6230CFB002}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppRealTime", "BlazorAppRealTime\BlazorAppRealTime.csproj", "{701DC663-FC5A-4863-A416-0D6230CFB002}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockTicker.Service", "StockTicker.Service\StockTicker.Service.csproj", "{284213C0-60C1-4218-A4FC-0D1226AAA871}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StockTicker.Service", "StockTicker.Service\StockTicker.Service.csproj", "{284213C0-60C1-4218-A4FC-0D1226AAA871}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
