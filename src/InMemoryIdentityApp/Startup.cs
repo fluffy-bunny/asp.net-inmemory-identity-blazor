@@ -161,6 +161,7 @@ namespace InMemoryIdentityApp
             app.UseHttpsRedirection();
             app.MapWhen(ctx => {
                 if (
+                ctx.Request.Path.StartsWithSegments("/BlazorApp1") ||
                 ctx.Request.Path.StartsWithSegments("/BlazorApp2") ||
                 ctx.Request.Path.StartsWithSegments("/BlazorAppRealTime"))
                     return false;
@@ -190,11 +191,16 @@ namespace InMemoryIdentityApp
                 AddBlazorPath(config, "BlazorAppRealTime");
             });
             app.MapWhen(ctx => {
+                return ctx.Request.Path.StartsWithSegments("/BlazorApp1");
+            }, config => {
+                AddBlazorPath(config, "BlazorApp1");
+            });
+            app.MapWhen(ctx => {
                 return ctx.Request.Path.StartsWithSegments("/BlazorApp2");
             }, config => {
                 AddBlazorPath(config, "BlazorApp2");
             });
-          
+
         }
         void AddBlazorPath(IApplicationBuilder builder, string name)
         {

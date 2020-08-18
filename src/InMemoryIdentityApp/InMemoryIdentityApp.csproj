@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>aspnet-InMemoryIdentityApp-1A9C3A33-5AB4-477E-832F-50251A7DC6E6</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
     <PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1" />
@@ -29,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BazorAuth.Shared\BazorAuth.Shared.csproj" />
+    <ProjectReference Include="..\BlazorApp1\BlazorApp1.csproj" />
     <ProjectReference Include="..\BlazorApp2\BlazorApp2.csproj" />
     <ProjectReference Include="..\BlazorAppRealTime\BlazorAppRealTime.csproj" />
     <ProjectReference Include="..\Identity.Contrib.InMemoryStore\Identity.Contrib.InMemoryStore.csproj" />
