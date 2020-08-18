@@ -17,9 +17,11 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.401
-    - name: Change Locations
-       run: |
-         cd src
+
+    - name: 'Build Image'
+      run: |
+        cd src
+        
     - name: Install dependencies
       run: dotnet restore
     - name: Build
