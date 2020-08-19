@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="DevExpress.Blazor" Version="20.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.7" />
-
+    <PackageReference Include="BlazorPro.Spinkit" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.1" PrivateAssets="all" />

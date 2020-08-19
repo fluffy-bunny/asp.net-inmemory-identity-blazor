@@ -1,0 +1,1 @@
+DxBlazorInternal.define("cjs-buttonedit-aa41845a.js",(function(t,e,n){function a(t,e){var n=window.getComputedStyle(t).fontSize,a=.6*Number(n.substring(0,n.length-2));return t.style.paddingRight=e.offsetWidth+a+"px",Promise.resolve("ok")}var i={CalculateInputRightPadding:a};n.CalculateInputRightPadding=a,n.default=i}),[]);

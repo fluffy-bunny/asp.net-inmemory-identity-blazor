@@ -1,41 +1,72 @@
 @page "/fetchdata"
 @using BazorAuth.Shared
+@using BlazorPro.Spinkit
 @inject Services.FetchWeatherForecastService WeatherService
 
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-                <th>Precipitation</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-            <tr>
-                <td>@forecast.Date.ToShortDateString()</td>
-                <td>@forecast.TemperatureC</td>
-                <td>@forecast.TemperatureF</td>
-                <td>@forecast.Summary</td>
-                <td>@forecast.Precipitation</td>
-            </tr>
-            }
-        </tbody>
-    </table>
-}
+<SpinLoader IsLoading="@(forecasts == null)">
+    <ContentTemplate>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Temp. (C)</th>
+                    <th>Temp. (F)</th>
+                    <th>Summary</th>
+                    <th>Precipitation</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var forecast in forecasts)
+                {
+                    <tr>
+                        <td>@forecast.Date.ToShortDateString()</td>
+                        <td>@forecast.TemperatureC</td>
+                        <td>@forecast.TemperatureF</td>
+                        <td>@forecast.Summary</td>
+                        <td>@forecast.Precipitation</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <DxChart Data="@forecasts" LabelOverlap="ChartLabelOverlap.Hide">
+            <DxChartTitle Text="Weather Forecast">
+                <DxChartSubTitle Text="(10 days)" />
+            </DxChartTitle>
+            <DxChartArgumentAxis>
+                <DxChartAxisTitle Text="Date" />
+                <DxChartAxisLabel Format="ChartAxisLabelFormat.ShortDate" />
+            </DxChartArgumentAxis>
+            <DxChartValueAxis>
+                <DxChartAxisTitle Text="Precipitation, mm" />
+            </DxChartValueAxis>
+            <DxChartValueAxis Name="Temperature" Position="HorizontalEdge.Right">
+                <DxChartAxisTitle Text="Temperature, C" />
+            </DxChartValueAxis>
+            <DxChartBarSeries ArgumentField="@((WeatherForecast i) => i.Date)"
+                              ValueField="@((WeatherForecast i) => i.Precipitation)"
+                              Name="Precipitation">
+                <DxChartSeriesLabel Visible="true" />
+            </DxChartBarSeries>
+            <DxChartLineSeries ArgumentField="@((WeatherForecast i) => i.Date)"
+                               ValueField="@((WeatherForecast i) => i.TemperatureC)"
+                               Name="Temperature"
+                               Axis="Temperature">
+                <DxChartSeriesPoint Symbol="@ChartPointSymbol.Polygon" Size="20" />
+                <DxChartSeriesLabel Visible="true">
+                    <DxChartSeriesLabelConnector Visible="true" Width="2" />
+                </DxChartSeriesLabel>
+            </DxChartLineSeries>
+            <DxChartLegend Orientation="@Orientation.Horizontal"
+                           HorizontalAlignment="@HorizontalAlignment.Right"
+                           Position="RelativePosition.Outside" />
+        </DxChart>
+
+    </ContentTemplate>
+</SpinLoader>
 
 @code {
     private WeatherForecast[] forecasts;
@@ -44,6 +75,4 @@ else
     {
         forecasts = await WeatherService.GetPublicWeatherForeacast();
     }
-
-
 }
