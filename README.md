@@ -30,7 +30,16 @@ Example..
 [devexpress](https://docs.devexpress.com/GeneralInformation/116042/installation/install-devexpress-controls-using-nuget-packages/obtain-your-nuget-feed-url)  
 One of my project relys on a devexpress nuget.  Its free, you just need to get your own feed url.  
 
-
+# Powershell Builds
+1. USER Environment Variable
+```
+NUGET_DEVEXPRESS_COM = https://nuget.devexpress.com/{secret}/api
+```
+```
+.\build.ps1
+.\run-docker-compose.ps1
+```
+[localhost](https://localhost:7001/)
 
 
 
