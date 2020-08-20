@@ -25,7 +25,7 @@ Example..
 }
 
 ```
-# Running Docker Compose Secrets
+# Windows Environment Variable Secrets (for docker-compose)
 Add the following as Windows environment variables.
 asp.net core 3.1 maps environment variable to what we have in secrets using a double underscore ```__``` instead of a ```:```
 ```
