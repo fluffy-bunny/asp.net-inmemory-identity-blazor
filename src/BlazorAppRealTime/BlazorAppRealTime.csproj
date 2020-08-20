@@ -3,7 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
-    <StaticWebAssetBasePath>BlazorAppRealTime</StaticWebAssetBasePath>
+    <StaticWebAssetBasePath>BlazorHost/BlazorAppRealTime</StaticWebAssetBasePath>
+    <BlazorCacheBootResources>false</BlazorCacheBootResources>
   </PropertyGroup>
 
   <ItemGroup>

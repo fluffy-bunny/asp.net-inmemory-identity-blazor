@@ -161,6 +161,7 @@ namespace InMemoryIdentityApp
             app.UseHttpsRedirection();
             app.MapWhen(ctx => {
                 if (
+                ctx.Request.Path.StartsWithSegments("/BlazorHost/BlazorAppRealTime") ||
                 ctx.Request.Path.StartsWithSegments("/BlazorApp1") ||
                 ctx.Request.Path.StartsWithSegments("/BlazorApp2") ||
                 ctx.Request.Path.StartsWithSegments("/BlazorAppRealTime"))
@@ -185,6 +186,12 @@ namespace InMemoryIdentityApp
                     endpoints.MapHub<StockTickerHub>("/stock-ticker");
                 });
             });
+
+            app.MapWhen(ctx => {
+                return ctx.Request.Path.StartsWithSegments("/BlazorHost/BlazorAppRealTime");
+            }, config => {
+                AddBlazorPathHosted(config, "BlazorHost","BlazorHost/BlazorAppRealTime");
+            });
             app.MapWhen(ctx => {
                 return ctx.Request.Path.StartsWithSegments("/BlazorAppRealTime");
             }, config => {
@@ -199,6 +206,29 @@ namespace InMemoryIdentityApp
                 return ctx.Request.Path.StartsWithSegments("/BlazorApp2");
             }, config => {
                 AddBlazorPath(config, "BlazorApp2");
+            });
+
+        }
+        void AddBlazorPathHosted(IApplicationBuilder builder, string page, string pattern)
+        {
+            builder.UseBlazorFrameworkFiles($"/{pattern}");
+            builder.UseStaticFiles();
+            builder.UseCorrelationId();
+            builder.UseCookiePolicy();
+            builder.UseCors("CorsPolicy");
+            //  app.UseBlazorFrameworkFiles();
+
+            builder.UseRouting();
+
+            builder.UseAuthentication();
+            builder.UseAuthorization();
+            builder.UseSession();
+            builder.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapRazorPages();
+                //  endpoints.MapFallbackToPage($"/{pattern}/{{*path:nonfile}}", $"/{page}");
+               
             });
 
         }
