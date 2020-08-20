@@ -25,6 +25,19 @@ Example..
 }
 
 ```
+# Running Docker Compose Secrets
+Add the following as Windows environment variables.
+asp.net core 3.1 maps environment variable to what we have in secrets using a double underscore ```__``` instead of a ```:```
+```
+  oidc__1__authority=<secret>
+  oidc__1__clientId=<secret>
+  oidc__1__clientSecret=<secret>
+  oidc__2__authority=<secret>
+  oidc__2__clientId=<secret>
+  oidc__2__clientSecret=<secret>
+  ApplicationInsights__InstrumentationKey=<secret>
+```
+The [docker_compose.yml](src/docker-compose.yml) will map windows environment varables into docker.  
 
 # External Repos
 [devexpress](https://docs.devexpress.com/GeneralInformation/116042/installation/install-devexpress-controls-using-nuget-packages/obtain-your-nuget-feed-url)  
