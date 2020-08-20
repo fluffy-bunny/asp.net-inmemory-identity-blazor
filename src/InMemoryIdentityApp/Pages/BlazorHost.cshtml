@@ -1,0 +1,43 @@
+﻿@page "{id}"
+@model BlazorHostModel
+@{
+    ViewData["Title"] = "BlazorHost";
+}
+@section headEnd
+{
+    <base href="/BlazorHost/@Model.BlazorId/" />
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="_content/DevExpress.Blazor/dx-blazor.css" rel="stylesheet" />
+    <link href="_content/BlazorPro.Spinkit/spinkit.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>BlazorHost @Model.BlazorId</p>
+
+@{
+    <app>
+        <div class="modal-overlay">
+            <div class="sk-wave">
+                <div class="sk-wave-rect"></div>
+                <div class="sk-wave-rect"></div>
+                <div class="sk-wave-rect"></div>
+                <div class="sk-wave-rect"></div>
+                <div class="sk-wave-rect"></div>
+            </div>
+        </div>
+    </app>
+
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+}
+
+@section Scripts
+{
+    <script src="_framework/blazor.webassembly.js"></script>
+}
