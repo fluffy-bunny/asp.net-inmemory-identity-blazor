@@ -25,10 +25,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.ResponseCompression;
 using InMemoryIdentityApp.Hubs;
 using ClientSideAuth.Extensions;
+using Microsoft.AspNetCore.Routing;
 
 namespace InMemoryIdentityApp
 {
-     
+
     public class Startup
     {
         public IConfiguration Configuration { get; }
@@ -159,9 +160,35 @@ namespace InMemoryIdentityApp
             }
 
             app.UseHttpsRedirection();
+            if (env.IsDevelopment())
+            {
+                app.Map("/graph", branch =>
+                    branch.UseMiddleware<GraphEndpointMiddleware>());
+            }
+
+            app.MapWhen(ctx => {
+                return ctx.Request.Path.StartsWithSegments("/BlazorHost/BlazorAppRealTime");
+            }, config => {
+                AddBlazorPathHosted(config, "BlazorHost", "BlazorHost/BlazorAppRealTime");
+            });
+            app.MapWhen(ctx => {
+                return ctx.Request.Path.StartsWithSegments("/BlazorAppRealTime");
+            }, config => {
+                AddBlazorPath(config, "BlazorAppRealTime");
+            });
+            app.MapWhen(ctx => {
+                return ctx.Request.Path.StartsWithSegments("/BlazorApp1");
+            }, config => {
+                AddBlazorPath(config, "BlazorApp1");
+            });
+            app.MapWhen(ctx => {
+                return ctx.Request.Path.StartsWithSegments("/BlazorApp2");
+            }, config => {
+                AddBlazorPath(config, "BlazorApp2");
+            });
             app.MapWhen(ctx => {
                 if (
-                ctx.Request.Path.StartsWithSegments("/BlazorHost/BlazorAppRealTime") ||
+                ctx.Request.Path.StartsWithSegments("/BlazorHost/") ||
                 ctx.Request.Path.StartsWithSegments("/BlazorApp1") ||
                 ctx.Request.Path.StartsWithSegments("/BlazorApp2") ||
                 ctx.Request.Path.StartsWithSegments("/BlazorAppRealTime"))
@@ -181,33 +208,11 @@ namespace InMemoryIdentityApp
                 config.UseSession();
                 config.UseEndpoints(endpoints =>
                 {
-                    endpoints.MapControllers();
-                    endpoints.MapRazorPages();
+                    MapBasicEndpoints(endpoints);
+
                     endpoints.MapHub<StockTickerHub>("/stock-ticker");
                 });
             });
-
-            app.MapWhen(ctx => {
-                return ctx.Request.Path.StartsWithSegments("/BlazorHost/BlazorAppRealTime");
-            }, config => {
-                AddBlazorPathHosted(config, "BlazorHost","BlazorHost/BlazorAppRealTime");
-            });
-            app.MapWhen(ctx => {
-                return ctx.Request.Path.StartsWithSegments("/BlazorAppRealTime");
-            }, config => {
-                AddBlazorPath(config, "BlazorAppRealTime");
-            });
-            app.MapWhen(ctx => {
-                return ctx.Request.Path.StartsWithSegments("/BlazorApp1");
-            }, config => {
-                AddBlazorPath(config, "BlazorApp1");
-            });
-            app.MapWhen(ctx => {
-                return ctx.Request.Path.StartsWithSegments("/BlazorApp2");
-            }, config => {
-                AddBlazorPath(config, "BlazorApp2");
-            });
-
         }
         void AddBlazorPathHosted(IApplicationBuilder builder, string page, string pattern)
         {
@@ -225,10 +230,7 @@ namespace InMemoryIdentityApp
             builder.UseSession();
             builder.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
-                endpoints.MapRazorPages();
-                //  endpoints.MapFallbackToPage($"/{pattern}/{{*path:nonfile}}", $"/{page}");
-               
+                MapBasicEndpoints(endpoints);
             });
 
         }
@@ -248,11 +250,15 @@ namespace InMemoryIdentityApp
             builder.UseSession();
             builder.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
-                endpoints.MapRazorPages();
+                MapBasicEndpoints(endpoints);
                 endpoints.MapFallbackToFile($"/{name}/{{*path:nonfile}}", $"{name}/index.html");
             });
       
+        }
+        private static void MapBasicEndpoints(IEndpointRouteBuilder endpoints)
+        {
+            endpoints.MapControllers();
+            endpoints.MapRazorPages();
         }
     }
 }
