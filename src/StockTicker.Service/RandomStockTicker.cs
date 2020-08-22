@@ -101,7 +101,7 @@ namespace StockTicker.Service
                     {
                         _timerStockUpdate.Dispose();
                     }
-
+                    _timerStockUpdate = null;
                     MarketState = MarketState.Closed;
                     this.Callback?.OnMarketStateChanged(MarketState);
                 }

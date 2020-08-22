@@ -11,9 +11,9 @@
     <link href="_content/BlazorPro.Spinkit/spinkit.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
 }
-<h1>@ViewData["Title"]</h1>
-
-<p>BlazorHost @Model.BlazorId</p>
+<div class="alert alert-primary" role="alert">
+    This Blazor client-side app (@Model.BlazorId) is hosted in a Razor Page
+</div>
 
 @{
     <app>
@@ -40,4 +40,5 @@
 @section Scripts
 {
     <script src="_framework/blazor.webassembly.js"></script>
+    <script src="js/site.js"></script>
 }

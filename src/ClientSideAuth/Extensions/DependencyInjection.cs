@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+﻿using ClientSideAuth.Services;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
 using System;
@@ -34,6 +35,12 @@ namespace ClientSideAuth.Extensions
                 });
 
             builder.Services.AddSingleton<IHostHttpClient, HostHttpClient>();
+
+            builder.Services.AddSingleton<AuthTimerService>();
+            builder.Services.AddSingleton<IAuthHandlerHook>(sp =>
+            {
+                return sp.GetRequiredService<AuthTimerService>();
+            });
 
             return builder;
         }

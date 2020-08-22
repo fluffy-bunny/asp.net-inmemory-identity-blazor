@@ -26,6 +26,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using InMemoryIdentityApp.Hubs;
 using ClientSideAuth.Extensions;
 using Microsoft.AspNetCore.Routing;
+using InMemoryIdentityApp.Authorization;
 
 namespace InMemoryIdentityApp
 {
@@ -33,6 +34,8 @@ namespace InMemoryIdentityApp
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        public string CookieAuthExpirationSeconds { get; }
+
         private IHostEnvironment _hostingEnvironment; 
         private ILogger _logger;
         private Exception _deferedException;
@@ -44,7 +47,8 @@ namespace InMemoryIdentityApp
             _hostingEnvironment = hostingEnvironment;
             _logger = new LoggerBuffered(LogLevel.Debug);
             _logger.LogInformation($"Create Startup {hostingEnvironment.ApplicationName} - {hostingEnvironment.EnvironmentName}");
-
+            CookieAuthExpirationSeconds =  Configuration["CookieAuthExpirationSeconds"];
+           
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -52,7 +56,12 @@ namespace InMemoryIdentityApp
         {
             try
             {
-                services.AddCors(options => options.AddPolicy("CorsPolicy",
+
+                services.Configure<AuthenticationPeekOptions>((options) =>
+                {
+                    options.CookieAuthExpirationSeconds = CookieAuthExpirationSeconds;
+                });
+               services.AddCors(options => options.AddPolicy("CorsPolicy",
                   builder =>
                   {
                       builder.AllowAnyMethod()
@@ -99,6 +108,8 @@ namespace InMemoryIdentityApp
                             return Task.CompletedTask;
                         }
                     };
+                    var authExpirationSeconds = Convert.ToInt32(CookieAuthExpirationSeconds);
+                    options.ExpireTimeSpan = new TimeSpan(0, 0, authExpirationSeconds);
                 });
                 services.AddAuthentication<ApplicationUser>(Configuration);
 
@@ -202,9 +213,7 @@ namespace InMemoryIdentityApp
                 config.UseCors("CorsPolicy");
 
                 config.UseRouting();
-
-                config.UseAuthentication();
-                config.UseAuthorization();
+                UseAuthMiddleware(config);
                 config.UseSession();
                 config.UseEndpoints(endpoints =>
                 {
@@ -213,6 +222,13 @@ namespace InMemoryIdentityApp
                     endpoints.MapHub<StockTickerHub>("/stock-ticker");
                 });
             });
+
+        }
+        private void UseAuthMiddleware(IApplicationBuilder builder)
+        {
+            builder.UseAuthentication();
+            builder.UseAuthorization();
+            builder.UseMiddleware<AuthenticationPeekMiddleware>();
         }
         void AddBlazorPathHosted(IApplicationBuilder builder, string page, string pattern)
         {
@@ -225,8 +241,7 @@ namespace InMemoryIdentityApp
 
             builder.UseRouting();
 
-            builder.UseAuthentication();
-            builder.UseAuthorization();
+            UseAuthMiddleware(builder);
             builder.UseSession();
             builder.UseEndpoints(endpoints =>
             {
@@ -245,8 +260,7 @@ namespace InMemoryIdentityApp
 
             builder.UseRouting();
 
-            builder.UseAuthentication();
-            builder.UseAuthorization();
+            UseAuthMiddleware(builder);
             builder.UseSession();
             builder.UseEndpoints(endpoints =>
             {
