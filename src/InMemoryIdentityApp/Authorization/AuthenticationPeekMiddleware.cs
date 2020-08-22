@@ -17,9 +17,6 @@ namespace InMemoryIdentityApp.Authorization
     }
     public class AuthenticationPeekMiddleware
     {
-        // Property key is used by Endpoint routing to determine if Authorization has run
-        private const string AuthorizationMiddlewareInvokedWithEndpointKey = "__AuthorizationMiddlewareWithEndpointInvoked";
-        private static readonly object AuthorizationMiddlewareWithEndpointInvokedValue = new object();
 
         private readonly RequestDelegate _next;
         private readonly AuthenticationPeekOptions _options;
@@ -39,7 +36,7 @@ namespace InMemoryIdentityApp.Authorization
 
             if (context.User.Identity.IsAuthenticated)
             {
-                context.Response.Headers.Add("X-AuthExpSec", _options.CookieAuthExpirationSeconds);
+                context.Response.Headers.Add("x-authexpsec", _options.CookieAuthExpirationSeconds);
             }
 
             await _next(context);
