@@ -23,14 +23,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/BlazorApp1">BlazorApp1</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/BlazorApp2">BlazorApp2</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/BlazorHost/BlazorAppRealTime">BlazorHost-BlazorAppRealTime</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Blazor Apps
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item nav-link text-dark" href="/BlazorApp1">BlazorApp1</a>
+                                <a class="dropdown-item nav-link text-dark" href="/BlazorApp2">BlazorApp2</a>
+                                <a class="dropdown-item nav-link text-dark" href="/BlazorHost/BlazorAppRealTime">BlazorAppRealTime</a>
+                            </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
@@ -46,7 +47,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer2 text-muted">
         <div class="container">
             &copy; 2020 - InMemoryIdentityApp - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>

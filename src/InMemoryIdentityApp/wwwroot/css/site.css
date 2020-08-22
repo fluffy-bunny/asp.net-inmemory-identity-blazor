@@ -63,11 +63,18 @@ body {
   margin-bottom: 60px;
 }
 .footer {
-  position: absolute;
+  position: unset;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
+}
+.footer2 {
+    position: unset;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
 }
 .modal-overlay {
     position: fixed;
