@@ -32,7 +32,7 @@ This will result in.
 /wwwroot/BlazorHost/BlazorAppRealTime/index.html 
 /wwwroot/_content/BlazorPro.Spinkit/{files} 
 ```
-We have a **COLLISION** problem now.  If you have multiple blazor apps and each includes ```BlazorPro.Spinkit``` and each has a different version then its anyones guess as to what versio of ```BlazorPro.Spinkit``` content files will finally be in the final publish.  
+We have a **COLLISION** problem now.  If you have multiple blazor apps and each includes ```BlazorPro.Spinkit``` and each has a different version then its anyones guess as to what version of ```BlazorPro.Spinkit``` content files will be in the final publish.  
 
 ## Workaround.
 1. In your blazor project do a publish at dev time.
