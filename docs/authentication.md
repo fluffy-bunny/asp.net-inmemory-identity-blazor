@@ -31,7 +31,7 @@ Also, what you get for free is a timer that will do a full page reload based upo
                             select item.Value;
 ```
 This returns the # seconds until we expire.  When we get this back we restart the timer, hence we slide it out.  
-I introduced a server-side middleware,[AuthenticationPeekMiddleware](/src/InMemoryIdentityApp/Authorization/AuthenticationPeekMiddleware.cs) that runs after the stock Auth;  
+I introduced a server-side middleware([AuthenticationPeekMiddleware](/src/InMemoryIdentityApp/Authorization/AuthenticationPeekMiddleware.cs)) that runs after the stock Auth;  
 ```
 private void UseAuthMiddleware(IApplicationBuilder builder)
 {
