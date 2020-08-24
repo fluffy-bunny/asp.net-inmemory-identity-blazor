@@ -171,6 +171,16 @@ namespace InMemoryIdentityApp
             }
 
             app.UseHttpsRedirection();
+            /*
+             * DOES NOT WORK when in AppService for Containers
+                        app.UseForwardedHeaders();
+            */
+            app.Use(async (context, next) =>
+            {
+                context.Request.Scheme = "https";
+                await next();
+            });
+
             if (env.IsDevelopment())
             {
                 app.Map("/graph", branch =>
@@ -180,7 +190,7 @@ namespace InMemoryIdentityApp
             app.MapWhen(ctx => {
                 return ctx.Request.Path.StartsWithSegments("/BlazorHost/BlazorAppRealTime");
             }, config => {
-                AddBlazorPathHosted(config, "BlazorHost", "BlazorHost/BlazorAppRealTime");
+                AddBlazorPathHosted(config, "BlazorHost/BlazorAppRealTime");
             });
             app.MapWhen(ctx => {
                 return ctx.Request.Path.StartsWithSegments("/BlazorAppRealTime");
@@ -230,7 +240,7 @@ namespace InMemoryIdentityApp
             builder.UseAuthorization();
             builder.UseMiddleware<AuthenticationPeekMiddleware>();
         }
-        void AddBlazorPathHosted(IApplicationBuilder builder, string page, string pattern)
+        void AddBlazorPathHosted(IApplicationBuilder builder, string pattern)
         {
             builder.UseBlazorFrameworkFiles($"/{pattern}");
             builder.UseStaticFiles();
