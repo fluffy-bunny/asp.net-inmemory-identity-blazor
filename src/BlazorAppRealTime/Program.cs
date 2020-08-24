@@ -21,6 +21,7 @@ namespace BlazorAppRealTime
             builder.RootComponents.Add<App>("app");
             builder.Services.AddOptions();
             builder.AddClientSideAuth();
+            builder.AddClientSideAuthTimerService();
             builder.Services.AddTransient<FetchWeatherForecastService>();
             builder.Services.AddTransient<FetchAuthStatusService>();
             builder.Services.AddDevExpressBlazor((options) => options.SizeMode = SizeMode.Medium);

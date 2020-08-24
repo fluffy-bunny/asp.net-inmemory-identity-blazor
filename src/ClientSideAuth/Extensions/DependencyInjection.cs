@@ -36,12 +36,15 @@ namespace ClientSideAuth.Extensions
 
             builder.Services.AddSingleton<IHostHttpClient, HostHttpClient>();
 
+            return builder;
+        }
+        public static WebAssemblyHostBuilder AddClientSideAuthTimerService(this WebAssemblyHostBuilder builder)
+        {
             builder.Services.AddSingleton<AuthTimerService>();
             builder.Services.AddSingleton<IAuthHandlerHook>(sp =>
             {
                 return sp.GetRequiredService<AuthTimerService>();
             });
-
             return builder;
         }
     }
