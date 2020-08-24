@@ -27,6 +27,7 @@ using InMemoryIdentityApp.Hubs;
 using ClientSideAuth.Extensions;
 using Microsoft.AspNetCore.Routing;
 using InMemoryIdentityApp.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace InMemoryIdentityApp
 {
@@ -61,13 +62,31 @@ namespace InMemoryIdentityApp
                 {
                     options.CookieAuthExpirationSeconds = CookieAuthExpirationSeconds;
                 });
-               services.AddCors(options => options.AddPolicy("CorsPolicy",
+                services.AddCors(options => options.AddPolicy("CorsPolicy",
                   builder =>
                   {
                       builder.AllowAnyMethod()
                             .AllowAnyHeader()
                             .AllowAnyOrigin();
                   }));
+                // set forward header keys to be the same value as request's header keys
+                // so that redirect URIs and other security policies work correctly.
+                var aspNETCORE_FORWARDEDHEADERS_ENABLED = string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"), "true", StringComparison.OrdinalIgnoreCase);
+                if (aspNETCORE_FORWARDEDHEADERS_ENABLED)
+                {
+                    //To forward the scheme from the proxy in non-IIS scenarios
+                    services.Configure<ForwardedHeadersOptions>(options =>
+                    {
+                        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                        // Only loopback proxies are allowed by default.
+                        // Clear that restriction because forwarders are enabled by explicit 
+                        // configuration.
+                        options.KnownNetworks.Clear();
+                        options.KnownProxies.Clear();
+                    });
+                }
+                _logger.LogInformation($"ASPNETCORE_FORWARDEDHEADERS_ENABLED = ${aspNETCORE_FORWARDEDHEADERS_ENABLED}");
+                
                 services.AddRandomStockTicker();
                 services.AddDefaultCorrelationId();
                 services.AddEnrichers();
@@ -171,15 +190,17 @@ namespace InMemoryIdentityApp
             }
 
             app.UseHttpsRedirection();
+            app.UseForwardedHeaders();
             /*
              * DOES NOT WORK when in AppService for Containers
                         app.UseForwardedHeaders();
-            */
+           
             app.Use(async (context, next) =>
             {
                 context.Request.Scheme = "https";
                 await next();
             });
+             */
 
             if (env.IsDevelopment())
             {
