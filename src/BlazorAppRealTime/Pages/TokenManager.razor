@@ -4,11 +4,8 @@
 @using OAuth2.TokenManagement.Client
 
 
-<h1>Counter</h1>
+<h1>Token Manager Example</h1>
 
-<p>Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 <button class="btn btn-primary" @onclick="FetchBearerToken">FetchBearerToken</button>
 
 @if (managedToken != null)
@@ -16,24 +13,37 @@
     <table class="table">
         <thead>
             <tr>
-                <th>AccessToken</th>
-                <th>Authority</th>
-                <th>ClientId</th>
-                <th>ExpiresIn</th>
-                <th>RefreshToken</th>
-                <th>ExpirationDate</th>
+                <th>Name</th>
+                <th>Value</th>
             </tr>
         </thead>
         <tbody>
+            <tr>
+                <td>Authority</td>
+                <td>@managedToken.Authority</td>
+            </tr>
+            <tr>
+                <td>ClientId</td>
+                <td>@managedToken.ClientId</td>
+            </tr>
+            <tr>
+                <td>AccessToken</td>
+                <td>@managedToken.AccessToken</td>
+            </tr>
+            <tr>
+                <td>RefreshToken</td>
+                <td>@managedToken.RefreshToken</td>
+            </tr>
+            <tr>
+                <td>ExpiresIn</td>
+                <td>@managedToken.ExpiresIn</td>
+            </tr>
 
             <tr>
-                <td>@managedToken.AccessToken</td>
-                <td>@managedToken.Authority</td>
-                <td>@managedToken.ClientId</td>
-                <td>@managedToken.ExpiresIn</td>
-                <td>@managedToken.RefreshToken</td>
+                <td>ExpirationDate</td>
                 <td>@managedToken.ExpirationDate</td>
             </tr>
+           
 
         </tbody>
     </table>
@@ -41,12 +51,9 @@
 }
 
 @code {
-    private int currentCount = 0;
+
     private ManagedToken managedToken;
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
+  
     private async Task FetchBearerToken()
     {
         managedToken = await FetchAuthStatusService.FetchFakeBearerTokenAsync();
