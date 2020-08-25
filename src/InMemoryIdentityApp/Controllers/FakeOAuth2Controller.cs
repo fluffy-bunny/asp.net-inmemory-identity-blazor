@@ -33,7 +33,8 @@ namespace InMemoryIdentityApp.Controllers
                 expires_in = 30,
                 token_type = "Bearer",
                 refresh_token = GuidS,
-                client_id = GuidS
+                client_id = GuidS,
+                token_endpoint = $"{root}/connect/token"
             };
         }
         [HttpGet]
