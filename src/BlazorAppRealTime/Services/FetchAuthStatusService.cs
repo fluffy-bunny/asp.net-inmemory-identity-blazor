@@ -1,5 +1,6 @@
 ﻿using BazorAuth.Shared;
 using ClientSideAuth;
+using OAuth2.TokenManagement.Client;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -10,9 +11,13 @@ namespace BlazorAppRealTime.Services
     public class FetchAuthStatusService
     {
         private readonly HttpClient _httpClient;
-        public FetchAuthStatusService(IHostHttpClient hostHttpClient)
+        private readonly ITokenManager _tokenManager;
+
+        public FetchAuthStatusService(IHostHttpClient hostHttpClient,
+             OAuth2.TokenManagement.Client.ITokenManager tokenManager)
         {
             _httpClient = hostHttpClient.CreateHttpClient();
+            _tokenManager = tokenManager;
         }
 
         public async Task<string> GetUserDisplayNameStatus()
@@ -29,6 +34,17 @@ namespace BlazorAppRealTime.Services
         {
             var openIdConnectSessionDetails = await _httpClient.GetFromJsonAsync<OpenIdConnectSessionDetails>("api/AuthStatus/oidc-session-details");
             return openIdConnectSessionDetails;
+        }
+        public async Task<ManagedToken> FetchFakeBearerTokenAsync()
+        {
+            var managedToken = await _httpClient.GetFromJsonAsync<ManagedToken>("api/FakeOAuth2/fake-bearer-token");
+            managedToken = await _tokenManager.AddManagedTokenAsync("fake", managedToken);
+            return managedToken;
+        }
+        public async Task<ManagedToken> GetFakeManagedTokenAsync()
+        {
+            var managedToken = await _tokenManager.GetManagedTokenAsync("fake");
+            return managedToken;
         }
     }
 }

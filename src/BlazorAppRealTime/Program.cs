@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using DevExpress.Blazor;
 using ClientSideAuth.Extensions;
 using BlazorAppRealTime.Services;
+using Blazored.LocalStorage;
+using OAuth2.TokenManagement.Client.Extensions;
 
 namespace BlazorAppRealTime
 {
@@ -22,10 +24,12 @@ namespace BlazorAppRealTime
             builder.Services.AddOptions();
             builder.AddClientSideAuth();
             builder.AddClientSideAuthTimerService();
+            builder.AddManagedTokenServices();
             builder.Services.AddTransient<FetchWeatherForecastService>();
             builder.Services.AddTransient<FetchAuthStatusService>();
             builder.Services.AddDevExpressBlazor((options) => options.SizeMode = SizeMode.Medium);
-
+            builder.Services.AddBlazoredLocalStorage(config =>
+                config.JsonSerializerOptions.WriteIndented = true);
             await builder.Build().RunAsync();
         }
     }
