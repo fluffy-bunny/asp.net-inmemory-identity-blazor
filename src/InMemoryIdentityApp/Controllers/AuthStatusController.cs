@@ -13,7 +13,7 @@ namespace InMemoryIdentityApp.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    [Authorize]
+   
     public class AuthStatusController : ControllerBase
     {
 
@@ -23,8 +23,15 @@ namespace InMemoryIdentityApp.Controllers
         {
             _logger = logger;
         }
+        [HttpGet]
+        [Route("ping")]
+        public async Task GetPingAsync()
+        {
+            // simply here to generate traffic and get the headers back
+        }
 
         [HttpGet]
+        [Authorize]
         [Route("display-name")]
         public async Task<string> GetDisplayNameAsync()
         {
@@ -34,6 +41,7 @@ namespace InMemoryIdentityApp.Controllers
             return displayName;
         }
         [HttpGet]
+        [Authorize]
         [Route("claims")]
         public async Task<IEnumerable<ClaimHandle>> GetClaimsAsync()
         {
@@ -48,6 +56,7 @@ namespace InMemoryIdentityApp.Controllers
             return claims;
         }
         [HttpGet]
+        [Authorize]
         [Route("oidc-session-details")]
         public async Task<OpenIdConnectSessionDetails> GetOpenIdConnectSessionDetailsAsync()
         {

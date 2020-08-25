@@ -20,6 +20,10 @@ namespace BlazorAppRealTime.Services
             _tokenManager = tokenManager;
         }
 
+        public async Task PingAsync()
+        {
+            await _httpClient.GetAsync("api/AuthStatus/ping");
+        }
         public async Task<string> GetUserDisplayNameStatus()
         {
             var displayName = await _httpClient.GetFromJsonAsync<string>("api/AuthStatus/display-name");
@@ -38,7 +42,7 @@ namespace BlazorAppRealTime.Services
         public async Task<ManagedToken> FetchFakeBearerTokenAsync()
         {
             var managedToken = await _httpClient.GetFromJsonAsync<ManagedToken>("api/FakeOAuth2/fake-bearer-token");
-            managedToken = await _tokenManager.AddManagedTokenAsync("fake", managedToken);
+            managedToken = await _tokenManager.AddConcurrentManagedTokenAsync("fake", managedToken);
             return managedToken;
         }
         public async Task<ManagedToken> GetFakeManagedTokenAsync()

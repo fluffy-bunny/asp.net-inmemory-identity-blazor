@@ -2,7 +2,7 @@
 @using BazorAuth.Shared
 @using BlazorPro.Spinkit
 @inject Services.FetchWeatherForecastService WeatherService
-
+@inject Services.FetchAuthStatusService FetchAuthStatusService
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
@@ -22,13 +22,13 @@
             <tbody>
                 @foreach (var forecast in forecasts)
                 {
-                    <tr>
-                        <td>@forecast.Date.ToShortDateString()</td>
-                        <td>@forecast.TemperatureC</td>
-                        <td>@forecast.TemperatureF</td>
-                        <td>@forecast.Summary</td>
-                        <td>@forecast.Precipitation</td>
-                    </tr>
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                    <td>@forecast.Precipitation</td>
+                </tr>
                 }
             </tbody>
         </table>
@@ -73,6 +73,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await FetchAuthStatusService.PingAsync();
         forecasts = await WeatherService.GetPublicWeatherForeacast();
     }
 }

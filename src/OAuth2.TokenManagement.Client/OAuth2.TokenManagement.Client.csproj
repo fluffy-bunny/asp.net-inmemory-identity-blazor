@@ -11,4 +11,9 @@
     <PackageReference Include="IdentityModel" Version="4.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClientSideAuth\ClientSideAuth.csproj" />
+    <ProjectReference Include="..\Common\Common.Client.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -35,7 +35,7 @@ namespace InMemoryIdentityApp
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        public string CookieAuthExpirationSeconds { get; }
+        public int CookieAuthExpirationSeconds { get; }
 
         private IHostEnvironment _hostingEnvironment; 
         private ILogger _logger;
@@ -48,7 +48,7 @@ namespace InMemoryIdentityApp
             _hostingEnvironment = hostingEnvironment;
             _logger = new LoggerBuffered(LogLevel.Debug);
             _logger.LogInformation($"Create Startup {hostingEnvironment.ApplicationName} - {hostingEnvironment.EnvironmentName}");
-            CookieAuthExpirationSeconds =  Configuration["CookieAuthExpirationSeconds"];
+            CookieAuthExpirationSeconds =  Convert.ToInt32(Configuration["CookieAuthExpirationSeconds"]);
            
         }
 

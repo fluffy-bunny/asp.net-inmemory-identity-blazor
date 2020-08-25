@@ -3,7 +3,6 @@
 
 @using OAuth2.TokenManagement.Client
 
-
 <h1>Token Manager Example</h1>
 
 <button class="btn btn-primary" @onclick="FetchBearerToken">FetchBearerToken</button>
@@ -53,7 +52,10 @@
 @code {
 
     private ManagedToken managedToken;
-  
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchAuthStatusService.PingAsync();
+    }
     private async Task FetchBearerToken()
     {
         managedToken = await FetchAuthStatusService.FetchFakeBearerTokenAsync();

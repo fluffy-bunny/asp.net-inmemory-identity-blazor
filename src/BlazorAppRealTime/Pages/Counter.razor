@@ -1,5 +1,5 @@
 ﻿@page "/counter"
-
+@inject Services.FetchAuthStatusService FetchAuthStatusService
 <h1>Counter</h1>
 
 <p>Current count: @currentCount</p>
@@ -8,7 +8,10 @@
 
 @code {
     private int currentCount = 0;
-
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchAuthStatusService.PingAsync();
+    }
     private void IncrementCount()
     {
         currentCount++;

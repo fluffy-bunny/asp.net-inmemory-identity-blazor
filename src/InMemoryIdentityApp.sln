@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StockTicker.Service", "Stoc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp1", "BlazorApp1\BlazorApp1.csproj", "{62BB6E8D-5E4E-4127-8C06-0EF62654820D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth2.TokenManagement.Client", "OAuth2.TokenManagement.Client\OAuth2.TokenManagement.Client.csproj", "{2D303945-7E2D-41C0-824F-E5ED13C78BEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAuth2.TokenManagement.Client", "OAuth2.TokenManagement.Client\OAuth2.TokenManagement.Client.csproj", "{2D303945-7E2D-41C0-824F-E5ED13C78BEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Client", "Common\Common.Client.csproj", "{5BE0AA0E-EF3D-4A02-9B84-06A3B2EFD3E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{2D303945-7E2D-41C0-824F-E5ED13C78BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D303945-7E2D-41C0-824F-E5ED13C78BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D303945-7E2D-41C0-824F-E5ED13C78BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BE0AA0E-EF3D-4A02-9B84-06A3B2EFD3E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BE0AA0E-EF3D-4A02-9B84-06A3B2EFD3E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BE0AA0E-EF3D-4A02-9B84-06A3B2EFD3E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BE0AA0E-EF3D-4A02-9B84-06A3B2EFD3E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,7 +13,7 @@ namespace InMemoryIdentityApp.Authorization
 {
     public class AuthenticationPeekOptions
     {
-        public string CookieAuthExpirationSeconds { get; set; }
+        public int CookieAuthExpirationSeconds { get; set; }
     }
     public class AuthenticationPeekMiddleware
     {
@@ -36,8 +36,9 @@ namespace InMemoryIdentityApp.Authorization
 
             if (context.User.Identity.IsAuthenticated)
             {
-                context.Response.Headers.Add("x-authexpsec", _options.CookieAuthExpirationSeconds);
+                context.Response.Headers.Add("x-authexpsec", (_options.CookieAuthExpirationSeconds + 60).ToString());
             }
+            context.Response.Headers.Add("x-authenticated", (context.User.Identity.IsAuthenticated).ToString());
 
             await _next(context);
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+﻿using ClientSideAuth.Services;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using OAuth2.TokenManagement.Client;
 using System;
@@ -14,6 +15,7 @@ namespace OAuth2.TokenManagement.Client.Extensions
         public static WebAssemblyHostBuilder AddManagedTokenServices(this WebAssemblyHostBuilder builder)
         {
             builder.Services.AddScoped<ITokenManager, TokenManager >();
+            builder.Services.AddScoped<IAuthHandlerStateSink, TokenManagerAuthHandlerStateSink>();
             return builder;
         }
     }

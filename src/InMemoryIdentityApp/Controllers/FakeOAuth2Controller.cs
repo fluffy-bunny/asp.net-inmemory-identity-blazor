@@ -30,7 +30,7 @@ namespace InMemoryIdentityApp.Controllers
             {
                 authority = root,
                 access_token = GuidS,
-                expires_in = 30,
+                expires_in = 15,
                 token_type = "Bearer",
                 refresh_token = GuidS,
                 client_id = GuidS,
@@ -94,7 +94,7 @@ namespace InMemoryIdentityApp.Controllers
             var refreshToken = form.Get(OidcConstants.TokenRequest.RefreshToken);
             return new { 
                 access_token = GuidS,
-                expires_in = 30,
+                expires_in = 15,
                 token_type = "Bearer",
                 refresh_token = GuidS
             };

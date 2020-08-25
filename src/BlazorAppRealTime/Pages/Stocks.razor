@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @using System.Collections.Generic
 @inject NavigationManager NavigationManager
+@inject Services.FetchAuthStatusService FetchAuthStatusService
 @inject Services.FetchWeatherForecastService WeatherService
 <h1>Stocks</h1>
 
@@ -18,10 +19,10 @@
     <tbody>
         @foreach (var item in _mapStocks)
         {
-            <tr>
-                <td>@item.Value.Symbol</td>
-                <td>@item.Value.Price</td>
-            </tr>
+        <tr>
+            <td>@item.Value.Symbol</td>
+            <td>@item.Value.Price</td>
+        </tr>
         }
     </tbody>
 </table>
@@ -70,6 +71,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await FetchAuthStatusService.PingAsync();
         var url = NavigationManager.ToAbsoluteUri("/stock-ticker");
         var url2 = url.AbsoluteUri;
         hubConnection = new HubConnectionBuilder()
