@@ -14,7 +14,7 @@ namespace OAuth2.TokenManagement.Client.Extensions
     {
         public static WebAssemblyHostBuilder AddManagedTokenServices(this WebAssemblyHostBuilder builder)
         {
-            builder.Services.AddScoped<ITokenManager, TokenManager >();
+            builder.Services.AddSingleton<ITokenManager, TokenManager >();
             builder.Services.AddScoped<IAuthHandlerStateSink, TokenManagerAuthHandlerStateSink>();
             return builder;
         }

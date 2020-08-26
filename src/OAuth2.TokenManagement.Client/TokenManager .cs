@@ -1,6 +1,4 @@
-﻿using Blazored.LocalStorage;
-using IdentityModel.Client;
-using Microsoft.Extensions.DependencyInjection;
+﻿using IdentityModel.Client;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,27 +13,20 @@ namespace OAuth2.TokenManagement.Client
     {
         const string MapKey = "4b9f6949-e3fe-40fa-b59a-f845f1704c33";
         static TimedLock _lock = new TimedLock();
-        private ILocalStorageService _localStorageService;
-
-        public TokenManager (
-            ILocalStorageService localStorageService)
+        private ConcurrentDictionary<string, ManagedToken> _managedTokens { get; set; }
+        public TokenManager ( )
         {
-            _localStorageService = localStorageService;
+            _managedTokens = new ConcurrentDictionary<string, ManagedToken>();
         }
         public async Task<ManagedToken> AddConcurrentManagedTokenAsync(string key, ManagedToken managedToken)
         {
             LockReleaser releaser = await _lock.Lock(new TimeSpan(0, 0, 30));
             try
             {
-                var map = await _localStorageService.GetItemAsync<Dictionary<string, ManagedToken>>(MapKey);
-                if (map == null)
-                {
-                    map = new Dictionary<string, ManagedToken>();
-                }
+               
                 managedToken.StartDate = DateTimeOffset.UtcNow;
                 managedToken.ExpirationDate = managedToken.StartDate.AddSeconds(managedToken.ExpiresIn);
-                map[key] = managedToken;
-                await _localStorageService.SetItemAsync(MapKey, map);
+                _managedTokens[key] = managedToken;
                 return managedToken;
             }
             finally
@@ -48,13 +39,8 @@ namespace OAuth2.TokenManagement.Client
             LockReleaser releaser = await _lock.Lock(new TimeSpan(0, 0, 30));
             try
             {
-                var map = await _localStorageService.GetItemAsync<Dictionary<string, ManagedToken>>(MapKey);
-                if (map == null)
-                {
-                    return null;
-                }
                 ManagedToken managedToken;
-                if (map.TryGetValue(key, out managedToken))
+                if (_managedTokens.TryGetValue(key, out managedToken))
                 {
                     return managedToken;
                 }
@@ -70,13 +56,7 @@ namespace OAuth2.TokenManagement.Client
             LockReleaser releaser = await _lock.Lock(new TimeSpan(0, 0, 30));
             try
             {
-                var map = await _localStorageService.GetItemAsync<Dictionary<string, ManagedToken>>(MapKey);
-                if (map == null)
-                {
-                    return;
-                }
-                map.Remove(key);
-                await _localStorageService.SetItemAsync(MapKey, map);
+                _managedTokens.TryRemove(key, out _);
             }
             finally
             {
@@ -135,7 +115,7 @@ namespace OAuth2.TokenManagement.Client
             LockReleaser releaser = await _lock.Lock(new TimeSpan(0, 0, 30));
             try
             {
-               await _localStorageService.RemoveItemAsync(MapKey);
+                _managedTokens.Clear();
             }
             finally
             {
